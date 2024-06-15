@@ -310,13 +310,13 @@ void Pic_test(void)
 // //	Show_Str(150+12,75,BLUE,YELLOW,"QQ",16,1);
 	Gui_Drawimg(0, 0, 320, 240, gImage_choose_eat);
 	delay_ms(50);
-	Gui_Drawimg(0, 0, 320, 240, gImage_choose_camera);
-	delay_ms(50);
-	Gui_Drawimg(0, 0, 320, 240, gImage_choose_wc);
-	delay_ms(50);
 	Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_eat);
 	delay_ms(50);
+	Gui_Drawimg(0, 0, 320, 240, gImage_choose_camera);
+	delay_ms(50);
 	Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_camera);
+	delay_ms(50);
+	Gui_Drawimg(0, 0, 320, 240, gImage_choose_wc);
 	delay_ms(50);
 	Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_wc);
 	delay_ms(50);
