@@ -15,3 +15,9 @@
 
 ## Encoding
 - GB2312
+
+## UI
+- Home 
+![](./imgs/UI/choose_camera.jpg)
+- Calling
+![](./imgs/UI/call_camera.jpg)
