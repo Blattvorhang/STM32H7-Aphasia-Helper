@@ -9,6 +9,7 @@
 - LD3320 (Voice Recognition)
 - Passive Buzzer
 
+
 ## PCB
 ![](./imgs/PCB.svg)
 
