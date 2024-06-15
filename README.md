@@ -9,9 +9,12 @@
 - LD3320 (Voice Recognition)
 - Passive Buzzer
 
-
 ## PCB
 ![](./imgs/PCB.svg)
 
 ## Encoding
 - GB2312
+
+## Project Configuration
+Target: Use MicroLIB
+Debug: ST-Link Debugger
