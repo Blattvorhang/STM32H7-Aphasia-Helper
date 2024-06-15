@@ -13,3 +13,6 @@
 
 ## PCB
 ![](./imgs/PCB.svg)
+
+## Encoding
+- GB2312
