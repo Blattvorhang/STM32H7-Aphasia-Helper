@@ -160,7 +160,8 @@ int main(void)
   while (1)
   {
 		//camera_refresh();
-		LD3320_main();
+		//LD3320_main();
+    Pic_test();
 		/*if((rev_flag=mpu_dmp_get_data(&pitch,&roll,&yaw))==0)
 		{
 			//printf("%.2f, %.2f, %.2f \r\n",pitch,roll,yaw);
