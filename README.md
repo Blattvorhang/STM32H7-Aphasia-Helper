@@ -8,8 +8,6 @@
 - ATK-MPU6050 (Gyroscope)
 - LD3320 (Voice Recognition)
 
-666666666666
-114514
 
 ## PCB
 ![](./imgs/PCB.svg)
