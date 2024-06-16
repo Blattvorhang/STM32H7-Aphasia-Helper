@@ -1,3 +1,5 @@
+.vscode/
+
 # The following gitignore is taken from https://blog.csdn.net/tianxifeng/article/details/102803927
 *.rar
 *.o

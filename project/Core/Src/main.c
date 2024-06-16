@@ -37,6 +37,7 @@
 #include "inv_mpu.h"
 #include "inv_mpu_dmp_motion_driver.h" 
 #include "mpu5060.h"
+#include "music.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -150,11 +151,12 @@ int main(void)
 	//OV7670_colorbar_test();
 	
 	HAL_UART_Receive_IT(&huart3,(unsigned char*)&aRxBuffer,1);
-*/
+
 	if(!LD3320_Init())
 		printf("LD3320 init successed\r\n");
 	else 
 		printf("LD3320 init failed\r\n");
+	*/
 	
 	//MPU_6050_Init();// 可以尝试 直接打开FIFO
 	//DMP_INT_FLAG=mpu_dmp_init();//初始化DMP
@@ -165,9 +167,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		menu_test();
+		PlaySong(2);
+		//menu_test();
 		//camera_refresh();
-		LD3320_main();
+		//LD3320_main();
 		/*if((rev_flag=mpu_dmp_get_data(&pitch,&roll,&yaw))==0)
 		{
 			printf("%.2f, %.2f, %.2f \r\n",pitch,roll,yaw);
