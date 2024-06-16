@@ -10,7 +10,7 @@
       <TargetName>H7_Ultimate</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -137,7 +137,7 @@
             <DriverSelection>4101</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2>BIN\UL2V8M.DLL</Flash2>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
           <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -186,6 +186,7 @@
             <RvdsVP>3</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
@@ -340,7 +341,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H7A3xxQ</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;.\hardwares;..\Hardware\Music</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;.\hardwares</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -562,62 +563,82 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>HDW</GroupName>
+          <GroupName>SYS</GroupName>
           <Files>
             <File>
               <FileName>delay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\hardwares\delay.c</FilePath>
+              <FilePath>..\Hardware\SYSTEM\delay.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>TFT</GroupName>
+          <Files>
             <File>
               <FileName>GUI.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\hardwares\GUI.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\hardwares\inv_mpu.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\hardwares\inv_mpu_dmp_motion_driver.c</FilePath>
+              <FilePath>..\Hardware\GUI\GUI.c</FilePath>
             </File>
             <File>
               <FileName>lcd.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\hardwares\lcd.c</FilePath>
-            </File>
-            <File>
-              <FileName>LD3320.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\hardwares\LD3320.c</FilePath>
-            </File>
-            <File>
-              <FileName>mpu5060.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\hardwares\mpu5060.c</FilePath>
-            </File>
-            <File>
-              <FileName>ov7670.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\hardwares\ov7670.c</FilePath>
-            </File>
-            <File>
-              <FileName>sccb.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\hardwares\sccb.c</FilePath>
+              <FilePath>..\Hardware\GUI\lcd.c</FilePath>
             </File>
             <File>
               <FileName>test.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\hardwares\test.c</FilePath>
+              <FilePath>..\Hardware\GUI\test.c</FilePath>
             </File>
             <File>
               <FileName>tft.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\hardwares\tft.c</FilePath>
+              <FilePath>..\Hardware\GUI\tft.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>CAM</GroupName>
+          <Files>
+            <File>
+              <FileName>ov7670.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\SCCB\ov7670.c</FilePath>
+            </File>
+            <File>
+              <FileName>sccb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\SCCB\sccb.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>MPU</GroupName>
+          <Files>
+            <File>
+              <FileName>inv_mpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\mpu5060\inv_mpu.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\mpu5060\inv_mpu_dmp_motion_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>mpu5060.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\mpu5060\mpu5060.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>VOICE</GroupName>
+          <Files>
+            <File>
+              <FileName>LD3320.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\LD3320\LD3320.c</FilePath>
             </File>
             <File>
               <FileName>music.c</FileName>

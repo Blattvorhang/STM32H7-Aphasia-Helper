@@ -1,5 +1,8 @@
 #include "mpu5060.h"
 
+float pitch,roll,yaw;
+extern signed char gyro_orientation[9];
+
 void MPU_6050_Init(void)
 {
 	HAL_StatusTypeDef status;
@@ -10,18 +13,15 @@ void MPU_6050_Init(void)
 	printf("status is %d\n",status);
 	//检查总线是否准备好
 	flag=HAL_I2C_GetState(&hi2c1);
-	printf("flag %X \n",flag);
 	//发送写寄存器命令
 	pdata=0x80; //复位MPU
 	HAL_I2C_Mem_Write(&hi2c1, ADDRESS_W, MPU_PWR_MGMT1_REG, 1, &pdata, 1, HAL_MAX_DELAY); //写0x80复位
 	status=HAL_I2C_IsDeviceReady(&hi2c1, ADDRESS_W, 10, HAL_MAX_DELAY);
-	printf("status is %d\n",status);
 	
 	HAL_Delay(500);  //复位后需要等待一段时间 等待芯片复位完成 
 	
 	//检查总线是否准备好
 	flag=HAL_I2C_GetState(&hi2c1);
-	printf("flag %X \n",flag);
 	//唤醒MPU
 	pdata=0x01; // 7位 1 重启  6位睡眠模式1 睡眠 2 唤醒   3位 为u你懂传感器0 开启    0-2位 时钟选择  01 PLL使用XZ轴陀螺作为参数
 	HAL_I2C_Mem_Write(&hi2c1, ADDRESS_W, MPU_PWR_MGMT1_REG, 1, &pdata, 1, HAL_MAX_DELAY); //写0x80复位
@@ -29,43 +29,35 @@ void MPU_6050_Init(void)
 	pdata=3<<3; //设置3 为量程2000  右移3位 到对应的 3 4 位寄存器中
 	HAL_I2C_Mem_Write(&hi2c1, ADDRESS_W, MPU_GYRO_CFG_REG, 1, &pdata, 1, HAL_MAX_DELAY); 
 	flag=HAL_I2C_GetState(&hi2c1);
-	printf("flag %X \n",flag);
 	//设置加速度传感器量程 2g
 	pdata=0; 
 	HAL_I2C_Mem_Write(&hi2c1, ADDRESS_W, MPU_ACCEL_CFG_REG, 1, &pdata, 1, HAL_MAX_DELAY); 
 	flag=HAL_I2C_GetState(&hi2c1);
-	printf("flag %X \n",flag);
 	//陀螺仪采样分频设置
 	pdata=19; //1000/50-1  这个还需要查资料查看  原因 和计算方法
 	HAL_I2C_Mem_Write(&hi2c1, ADDRESS_W, MPU_SAMPLE_RATE_REG, 1, &pdata, 1, HAL_MAX_DELAY); 
 	flag=HAL_I2C_GetState(&hi2c1);
-	printf("flag %X \n",flag);
 	//关闭所有中断
 	pdata=0;
 	HAL_I2C_Mem_Write(&hi2c1, ADDRESS_W, MPU_INT_EN_REG, 1, &pdata, 1, HAL_MAX_DELAY); 
 	//I2C 主模式的 外接磁力传感器接口关闭
 	flag=HAL_I2C_GetState(&hi2c1);
-	printf("flag %X \n",flag);
 	pdata=0;
 	HAL_I2C_Mem_Write(&hi2c1, ADDRESS_W, MPU_USER_CTRL_REG, 1, &pdata, 1, HAL_MAX_DELAY); 
 	//关闭FIFO 
 	flag=HAL_I2C_GetState(&hi2c1);
-	printf("flag %X \n",flag);
 	pdata=0;
 	HAL_I2C_Mem_Write(&hi2c1, ADDRESS_W, MPU_FIFO_EN_REG, 1, &pdata, 1, HAL_MAX_DELAY); 
 	//中断旁路设置 低电平有效
 	flag=HAL_I2C_GetState(&hi2c1);
-	printf("flag %X \n",flag);
 	pdata=0X80;
 	HAL_I2C_Mem_Write(&hi2c1, ADDRESS_W, MPU_INTBP_CFG_REG, 1, &pdata, 1, HAL_MAX_DELAY); 
 	//设置低通滤波器
 	MPU_Set_LPF(50/2);
 	//读器件ID  默认是 0x68 
 	flag=HAL_I2C_GetState(&hi2c1);
-	printf("flag %X \n",flag);
 	pdata=MPU_DEVICE_ID_REG;
 	HAL_I2C_Mem_Read(&hi2c1, ADDRESS_R, MPU_DEVICE_ID_REG, 1, &pdata, 1, HAL_MAX_DELAY); 
-	printf("ID is %X \n",pdata);
 	//使能 陀螺仪 和加速度 工作
 	flag=HAL_I2C_GetState(&hi2c1);
 	printf("flag %X \n",flag);
@@ -171,38 +163,7 @@ unsigned char HAL_i2c_read(unsigned char slave_addr, unsigned char reg_addr, uns
 	HAL_I2C_Mem_Read(&hi2c1, ((slave_addr<<1)|1), reg_addr, 1, (unsigned char *)data, length, HAL_MAX_DELAY);
 	return 0;
 }
-//mpu6050,dmp初始化
-//返回值:0,正常
-//    其他,失败
-unsigned char mpu_dmp_init(void)
-{
-	unsigned char res=0;
-	//IIC_Init(); 		//初始化IIC总线
-	if(mpu_init()==0)	//初始化MPU6050
-	{	 
-		res=mpu_set_sensors(INV_XYZ_GYRO|INV_XYZ_ACCEL);//设置所需要的传感器
-		if(res)return 1; 
-		res=mpu_configure_fifo(INV_XYZ_GYRO | INV_XYZ_ACCEL);//设置FIFO
-		if(res)return 2; 
-		res=mpu_set_sample_rate(DEFAULT_MPU_HZ);	//设置采样率
-		if(res)return 3; 
-		res=dmp_load_motion_driver_firmware();		//加载dmp固件
-		if(res)return 4; 
-		res=dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_orientation));//设置陀螺仪方向
-		if(res)return 5; 
-		res=dmp_enable_feature(DMP_FEATURE_6X_LP_QUAT|DMP_FEATURE_TAP|	//设置dmp功能
-		    DMP_FEATURE_ANDROID_ORIENT|DMP_FEATURE_SEND_RAW_ACCEL|DMP_FEATURE_SEND_CAL_GYRO|
-		    DMP_FEATURE_GYRO_CAL);
-		if(res)return 6; 
-		res=dmp_set_fifo_rate(DEFAULT_MPU_HZ);	//设置DMP输出速率(最大不超过200Hz)
-		if(res)return 7;   
-		res=run_self_test();		//自检
-		if(res)return 8;    
-		res=mpu_set_dmp_state(1);	//使能DMP
-		if(res)return 9;     
-	}
-	return 0;
-}
+
 //陀螺仪方向控制
 unsigned short inv_orientation_matrix_to_scalar(
     const signed char *mtx)
@@ -309,5 +270,39 @@ unsigned char mpu_dmp_get_data(float *pitch,float *roll,float *yaw)
 		*roll  = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2* q2 + 1)* 57.3;	// roll
 		*yaw   = atan2(2*(q1*q2 + q0*q3),q0*q0+q1*q1-q2*q2-q3*q3) * 57.3;	//yaw
 	}else return 2;
+	return 0;
+}
+
+
+//mpu6050,dmp初始化
+//返回值:0,正常
+//    其他,失败
+unsigned char mpu_dmp_init(void)
+{
+	unsigned char res=0;
+	//IIC_Init(); 		//初始化IIC总线
+	if(mpu_init()==0)	//初始化MPU6050
+	{	 
+		res=mpu_set_sensors(INV_XYZ_GYRO|INV_XYZ_ACCEL);//设置所需要的传感器
+		if(res)return 1; 
+		res=mpu_configure_fifo(INV_XYZ_GYRO | INV_XYZ_ACCEL);//设置FIFO
+		if(res)return 2; 
+		res=mpu_set_sample_rate(DEFAULT_MPU_HZ);	//设置采样率
+		if(res)return 3; 
+		res=dmp_load_motion_driver_firmware();		//加载dmp固件
+		if(res)return 4; 
+		res=dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_orientation));//设置陀螺仪方向
+		if(res)return 5; 
+		res=dmp_enable_feature(DMP_FEATURE_6X_LP_QUAT|DMP_FEATURE_TAP|	//设置dmp功能
+		    DMP_FEATURE_ANDROID_ORIENT|DMP_FEATURE_SEND_RAW_ACCEL|DMP_FEATURE_SEND_CAL_GYRO|
+		    DMP_FEATURE_GYRO_CAL);
+		if(res)return 6; 
+		res=dmp_set_fifo_rate(DEFAULT_MPU_HZ);	//设置DMP输出速率(最大不超过200Hz)
+		if(res)return 7;   
+		res=run_self_test();		//自检
+		if(res)return 8;    
+		res=mpu_set_dmp_state(1);	//使能DMP
+		if(res)return 9;     
+	}
 	return 0;
 }

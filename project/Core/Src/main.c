@@ -60,7 +60,7 @@
 /* USER CODE BEGIN PV */
 extern uint8_t ov_sta;	//在stm32h7xx_it里面定义
 uint16_t screen_buffer[240][320];
-static signed char gyro_orientation[9] = { 1, 0, 0,
+signed char gyro_orientation[9] = { 1, 0, 0,
                                            0, 1, 0,
                                            0, 0, 1};
 
@@ -74,13 +74,6 @@ void PeriphCommonClock_Config(void);
 int fputc(int ch, FILE *f);
 int fgetc(FILE *f);
 void camera_refresh(void);
-unsigned char mpu_dmp_init(void);
-//得到dmp处理后的数据(注意,本函数需要比较多堆栈,局部变量有点多)
-//pitch:俯仰角 精度:0.1°   范围:-90.0° <---> +90.0°
-//roll:横滚角  精度:0.1°   范围:-180.0°<---> +180.0°
-//yaw:航向角   精度:0.1°   范围:-180.0°<---> +180.0°
-//返回值:0,正常
-//    其他,失败
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -95,6 +88,7 @@ unsigned char mpu_dmp_init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	uint8_t mpu_count = 0;
 	uint8_t aRxBuffer = 0;
 	unsigned char DMP_INT_FLAG=0;
 	unsigned char rev_flag=0;
@@ -171,12 +165,23 @@ int main(void)
 		//menu_test();
 		//camera_refresh();
 		//LD3320_main();
+    Pic_test();
 		/*if((rev_flag=mpu_dmp_get_data(&pitch,&roll,&yaw))==0)
 		{
-			printf("%.2f, %.2f, %.2f \r\n",pitch,roll,yaw);
-			HAL_Delay(20);
+			//printf("%.2f, %.2f, %.2f \r\n",pitch,roll,yaw);
+			mpu_count++;
+			if (mpu_count == 10){
+				if (roll < -45) printf("forward\r\n");
+				else if (roll > 45) printf("back\r\n");
+				if (pitch < -45) printf("left\r\n");
+				else if (pitch > 45) printf("right\r\n");
+				if (roll < 30 && roll > -30 && pitch < 30 && pitch > -30) printf("still\r\n");
+				mpu_count = 0;
+				HAL_Delay(5);
+			}
+			else HAL_Delay(10);
 		}
-		else HAL_Delay(100);//读取频率不能太慢 防止FIFO溢出
+		else HAL_Delay(50);//读取频率不能太慢 防止FIFO溢出
 		*/
 		/*if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin))
 		{
@@ -348,38 +353,6 @@ void camera_refresh(void)
 	} 
 }
 
-//mpu6050,dmp初始化
-//返回值:0,正常
-//    其他,失败
-unsigned char mpu_dmp_init(void)
-{
-	unsigned char res=0;
-	//IIC_Init(); 		//初始化IIC总线
-	if(mpu_init()==0)	//初始化MPU6050
-	{	 
-		res=mpu_set_sensors(INV_XYZ_GYRO|INV_XYZ_ACCEL);//设置所需要的传感器
-		if(res)return 1; 
-		res=mpu_configure_fifo(INV_XYZ_GYRO | INV_XYZ_ACCEL);//设置FIFO
-		if(res)return 2; 
-		res=mpu_set_sample_rate(DEFAULT_MPU_HZ);	//设置采样率
-		if(res)return 3; 
-		res=dmp_load_motion_driver_firmware();		//加载dmp固件
-		if(res)return 4; 
-		res=dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_orientation));//设置陀螺仪方向
-		if(res)return 5; 
-		res=dmp_enable_feature(DMP_FEATURE_6X_LP_QUAT|DMP_FEATURE_TAP|	//设置dmp功能
-		    DMP_FEATURE_ANDROID_ORIENT|DMP_FEATURE_SEND_RAW_ACCEL|DMP_FEATURE_SEND_CAL_GYRO|
-		    DMP_FEATURE_GYRO_CAL);
-		if(res)return 6; 
-		res=dmp_set_fifo_rate(DEFAULT_MPU_HZ);	//设置DMP输出速率(最大不超过200Hz)
-		if(res)return 7;   
-		res=run_self_test();		//自检
-		if(res)return 8;    
-		res=mpu_set_dmp_state(1);	//使能DMP
-		if(res)return 9;     
-	}
-	return 0;
-}
 /* USER CODE END 4 */
 
 /**

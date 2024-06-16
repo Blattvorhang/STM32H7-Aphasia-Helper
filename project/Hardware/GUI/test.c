@@ -300,14 +300,31 @@ void Chinese_Font_test(void)
 ******************************************************************************/
 void Pic_test(void)
 {
-	DrawTestPage("Õº∆¨œ‘ æ≤‚ ‘");
-	//LCD_Fill(0,20,lcddev.width,lcddev.height-20,WHITE);
-	Gui_Drawbmp16(20,30,gImage_qq);
-	Show_Str(20+12,75,BLUE,YELLOW,"QQ",16,1);
-	Gui_Drawbmp16(70,30,gImage_qq);
-	Show_Str(70+12,75,BLUE,YELLOW,"QQ",16,1);
-//	Gui_Drawbmp16(150,30,gImage_qq);
-//	Show_Str(150+12,75,BLUE,YELLOW,"QQ",16,1);
+// 	DrawTestPage("Õº∆¨œ‘ æ≤‚ ‘");
+// 	//LCD_Fill(0,20,lcddev.width,lcddev.height-20,WHITE);
+// 	Gui_Drawbmp16(20,30,gImage_qq);
+// 	Show_Str(20+12,75,BLUE,YELLOW,"QQ",16,1);
+// 	Gui_Drawbmp16(70,30,gImage_qq);
+// 	Show_Str(70+12,75,BLUE,YELLOW,"QQ",16,1);
+// //	Gui_Drawbmp16(150,30,gImage_qq);
+// //	Show_Str(150+12,75,BLUE,YELLOW,"QQ",16,1);
+	Gui_Drawimg(0, 0, 320, 240, gImage_choose_eat);
+	delay_ms(50);
+	Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_eat);
+	delay_ms(50);
+	Gui_Drawimg(0, 0, 320, 240, gImage_choose_camera);
+	delay_ms(50);
+	Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_camera);
+	delay_ms(50);
+	Gui_Drawimg(0, 0, 320, 240, gImage_choose_wc);
+	delay_ms(50);
+	Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_wc);
+	delay_ms(50);
+	Gui_Drawimg(0, 0, 320, 240, gImage_call_eat);
+	delay_ms(50);
+	Gui_Drawimg(0, 0, 320, 240, gImage_call_camera);
+	delay_ms(50);
+	Gui_Drawimg(0, 0, 320, 240, gImage_call_wc);
 	delay_ms(1200);
 }
 
@@ -328,7 +345,8 @@ void Rotate_Test(void)
 	LCD_direction(i);
 	DrawTestPage("∆¡ƒª–˝◊™≤‚ ‘");
 	Show_Str(20,30,BLUE,YELLOW,Direction[i],16,1);
-	Gui_Drawbmp16(30,50,gImage_qq);
+	//Gui_Drawbmp16(30,50,gImage_qq);
+	Gui_Drawimg(0, 0, 320, 240, gImage_choose_camera);
 	delay_ms(1000);delay_ms(1000);
 	}
 	LCD_direction(USE_HORIZONTAL);
