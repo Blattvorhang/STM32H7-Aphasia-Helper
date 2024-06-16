@@ -2,30 +2,30 @@
 #include "music.h"
 
 
-#define SILENT TONE_SILENT
-#define LOW_DO TONE_LOW_DO
-#define LOW_RE TONE_LOW_RE
-#define LOW_MI TONE_LOW_MI
-#define LOW_FA TONE_LOW_FA
-#define LOW_SOL TONE_LOW_SOL
-#define LOW_LA TONE_LOW_LA
-#define LOW_TI TONE_LOW_TI
-#define DO TONE_DO
-#define RE TONE_RE
-#define MI TONE_MI
-#define FA TONE_FA
-#define SOL TONE_SOL
-#define LA TONE_LA
-#define TI_FLAT TONE_TI_FLAT
-#define TI TONE_TI
-#define HIGH_DO TONE_HIGH_DO
-#define HIGH_RE TONE_HIGH_RE
-#define HIGH_MI_FLAT TONE_HIGH_MI_FLAT
-#define HIGH_MI TONE_HIGH_MI
-#define HIGH_FA TONE_HIGH_FA
-#define HIGH_SOL TONE_HIGH_SOL
-#define HIGH_LA TONE_HIGH_LA
-#define HIGH_TI TONE_HIGH_TI
+#define SILENT        TONE_SILENT
+#define LOW_DO        TONE_LOW_DO
+#define LOW_RE        TONE_LOW_RE
+#define LOW_MI        TONE_LOW_MI
+#define LOW_FA        TONE_LOW_FA
+#define LOW_SOL       TONE_LOW_SOL
+#define LOW_LA        TONE_LOW_LA
+#define LOW_TI        TONE_LOW_TI
+#define DO            TONE_DO
+#define RE            TONE_RE
+#define MI            TONE_MI
+#define FA            TONE_FA
+#define SOL           TONE_SOL
+#define LA            TONE_LA
+#define TI_FLAT       TONE_TI_FLAT
+#define TI            TONE_TI
+#define HIGH_DO       TONE_HIGH_DO
+#define HIGH_RE       TONE_HIGH_RE
+#define HIGH_MI_FLAT  TONE_HIGH_MI_FLAT
+#define HIGH_MI       TONE_HIGH_MI
+#define HIGH_FA       TONE_HIGH_FA
+#define HIGH_SOL      TONE_HIGH_SOL
+#define HIGH_LA       TONE_HIGH_LA
+#define HIGH_TI       TONE_HIGH_TI
 
 
 Note song[][SONG_MAXLEN] = {{
@@ -52,8 +52,8 @@ Note song[][SONG_MAXLEN] = {{
     }
 };
 
-/* 响一个音 */
-void SoundTone(Note note)
+/* 响一个音符 */
+void SoundNote(Note note)
 {
     uint16_t i;
     uint32_t half_period_us = 500000 / (uint32_t)(note.tone);
@@ -77,7 +77,7 @@ void PlaySong(uint8_t song_index)
 {
     uint16_t note_index = 0;
     while(song[song_index][note_index].tone != TONE_STOP) {
-        SoundTone(song[song_index][note_index]);  // 播放一个音符
+        SoundNote(song[song_index][note_index]);  // 播放一个音符
         delay_ms(300);
         note_index++;
     }
