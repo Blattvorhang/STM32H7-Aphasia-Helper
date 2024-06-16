@@ -25,5 +25,5 @@
 ![](./imgs/UI/call_camera.jpg)
 
 ## Project Configuration
-Target: Use MicroLIB
-Debug: ST-Link Debugger
+- Target: Use MicroLIB
+- Debug: ST-Link Debugger
