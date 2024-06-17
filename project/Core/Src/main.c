@@ -161,7 +161,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		PlaySong(2);
+		//PlaySong(2);
+		Gui_Drawimg(0, 0, 320, 240, gImage_choose_eat);
 		//menu_test();
 		//camera_refresh();
 		//LD3320_main();

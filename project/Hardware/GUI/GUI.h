@@ -54,6 +54,8 @@
 #ifndef __GUI_H__
 #define __GUI_H__
 
+#include "pic.h"
+
 void GUI_DrawPoint(u16 x,u16 y,u16 color);
 void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color);
 void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2);

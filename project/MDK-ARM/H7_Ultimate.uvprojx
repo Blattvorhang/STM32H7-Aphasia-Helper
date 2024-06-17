@@ -10,7 +10,7 @@
       <TargetName>H7_Ultimate</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H7A3xxQ</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;.\hardwares</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\Hardware\GUI;..\Hardware\LD3320;..\Hardware\mpu5060;..\Hardware\Music;..\Hardware\SCCB;..\Hardware\SYSTEM</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -590,9 +590,9 @@
               <FilePath>..\Hardware\GUI\test.c</FilePath>
             </File>
             <File>
-              <FileName>tft.c</FileName>
+              <FileName>pic.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Hardware\GUI\tft.c</FilePath>
+              <FilePath>..\Hardware\GUI\pic.c</FilePath>
             </File>
           </Files>
         </Group>
