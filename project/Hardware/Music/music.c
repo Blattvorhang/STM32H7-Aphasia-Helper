@@ -47,7 +47,7 @@ Note song[][SONG_MAXLEN] = {{
         {HIGH_RE, 8}, {HIGH_DO, 4}, {TI_FLAT, 4}, {HIGH_MI_FLAT, 8}, {HIGH_RE, 8},
         {HIGH_RE, 8}, {HIGH_DO, 4}, {TI_FLAT, 4}, {HIGH_FA,      8}, {HIGH_RE, 8},
         {HIGH_RE, 8}, {HIGH_DO, 4}, {TI_FLAT, 4}, {HIGH_MI_FLAT, 8}, {HIGH_RE, 8},
-        {HIGH_RE, 8}, {HIGH_DO, 4}, {TI_FLAT, 4}, {HIGH_FA,      8}, {SILENT, 8},
+        {HIGH_RE, 8}, {HIGH_DO, 4}, {TI_FLAT, 4}, {HIGH_FA,      8}, {SILENT,  8},
         {TONE_STOP, -1} // 停止标记
     }
 };
@@ -61,7 +61,7 @@ void SoundNote(Note note)
     uint32_t impulse_num = (uint32_t)(note.tone) * (uint32_t)(note.duration) * DURATION_UNIT / 1000;
     for (i = 0; i < impulse_num; i++) {
         // tone为频率，period_us为周期
-        if (tone != TONE_SILENT) {  // 频率为0时不发音
+        if (note.tone != TONE_SILENT) {  // 频率为0时不发音
             BUZZER_RESET;  // BUZZER引脚拉低，响
             delay_us(half_period_us);
             BUZZER_SET;    // BUZZER引脚拉高，不响
@@ -77,8 +77,11 @@ void PlaySong(uint8_t song_index)
 {
     uint16_t note_index = 0;
     while(song[song_index][note_index].tone != TONE_STOP) {
-        SoundNote(song[song_index][note_index]);  // 播放一个音符
-        delay_ms(300);
-        note_index++;
+			if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0) {  // 每播放一个音，判断一次红外，遮挡则停止播放歌曲
+				break;
+			}
+			SoundNote(song[song_index][note_index]);  // 播放一个音符
+			delay_ms(300);
+			note_index++;
     }
 }

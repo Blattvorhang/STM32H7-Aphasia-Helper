@@ -1,5 +1,5 @@
-# STM32H7 Aphasia Helper
-失语症患者辅助设备
+# STM32H7 Stroke Helper
+中风患者辅助设备
 
 ## Hardware
 - STM32H7A3ZI-Q
@@ -27,3 +27,5 @@
 ## Project Configuration
 - Target: Use MicroLIB
 - Debug: ST-Link Debugger
+
+# Citation

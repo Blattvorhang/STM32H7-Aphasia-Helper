@@ -42,7 +42,11 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+typedef enum {
+	IMG_CAMERA = 0,
+	IMG_EAT,
+	IMG_WC
+} ImageIdx;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -90,9 +94,13 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	uint8_t mpu_count = 0;
 	uint8_t aRxBuffer = 0;
-	uint8_t choice = 0;
-	unsigned char DMP_INT_FLAG=0;
-	unsigned char rev_flag=0;
+	uint8_t DMP_INT_FLAG = 0;
+	uint8_t rev_flag = 0;
+	uint8_t confirm_flag = 0;
+	uint8_t last_infrared = 0;
+	uint8_t mpu_success_flag = 0;  // 表示陀螺仪成功读到数据，一旦成功一次，后续基本都可以持续读数据
+	
+	ImageIdx choice = IMG_CAMERA;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -156,7 +164,6 @@ int main(void)
 	MPU_6050_Init();// 可以尝试 直接打开FIFO
 	DMP_INT_FLAG=mpu_dmp_init();//初始化DMP
 	
-	Gui_Drawimg(0, 0, 320, 240, gImage_choose_camera);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -167,92 +174,116 @@ int main(void)
 		//camera_refresh();
 		//LD3320_main();
     //Pic_test();
-		if((rev_flag=mpu_dmp_get_data(&pitch,&roll,&yaw))==0)
-		{
-			//printf("%.2f, %.2f, %.2f \r\n",pitch,roll,yaw);
-			mpu_count++;
-			if (mpu_count == 10){
-				if (roll < -45) 
-				{
-					printf("forward\r\n");
-				}
-				else if (roll > 45) 
-				{
-					printf("back\r\n");
-				}
-				if (pitch < -45) 
-				{
-					printf("left\r\n");
-					Gui_Drawimg(0, 0, 320, 240, gImage_choose_eat);
-					choice = 1;
-				}
-				else if (pitch > 45) 
-				{
-					printf("right\r\n");
-					Gui_Drawimg(0, 0, 320, 240, gImage_choose_wc);
-					choice = 2;
-				}
-				if (roll < 30 && roll > -30 && pitch < 30 && pitch > -30) 
-				{
-					printf("still\r\n");
-					Gui_Drawimg(0, 0, 320, 240, gImage_choose_camera);
-					choice = 0;
-				}
-				mpu_count = 0;
-				HAL_Delay(5);
-			}
-			else HAL_Delay(10);
-		}
-		else HAL_Delay(50);
 		
-		if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0)
-		{
-			HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_SET);
-			switch (choice)
+		/* 非确认状态 */
+		if (!confirm_flag) {			
+			// 读取陀螺仪数据
+			if((rev_flag=mpu_dmp_get_data(&pitch,&roll,&yaw)) == 0)
 			{
-				case 0:
-					Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_camera);
-					break;
-				case 1:
-					Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_eat);
-					break;
-				case 2:
-					Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_wc);
-					break;
-				default:
-					break;
-			}
-
-			HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_RESET);
-			HAL_Delay(50);
-			if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0)
-			{
-				switch (choice)
-				{
-					case 0:
-						Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_camera);
-						while (!HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin)) camera_refresh();
+				mpu_success_flag = 1;
+				//printf("%.2f, %.2f, %.2f \r\n",pitch,roll,yaw);
+				mpu_count++;
+				if (mpu_count == 10){
+					if (roll < -45) 
+					{
+						printf("forward\r\n");
+					}
+					else if (roll > 45) 
+					{
+						printf("back\r\n");
+					}
+					if (pitch < -45) 
+					{
+						printf("left\r\n");
+						Gui_Drawimg(0, 0, 320, 240, gImage_choose_eat);
+						choice = IMG_EAT;
+					}
+					else if (pitch > 45) 
+					{
+						printf("right\r\n");
+						Gui_Drawimg(0, 0, 320, 240, gImage_choose_wc);
+						choice = IMG_WC;
+					}
+					if (roll < 30 && roll > -30 && pitch < 30 && pitch > -30) 
+					{
+						printf("still\r\n");
+						Gui_Drawimg(0, 0, 320, 240, gImage_choose_camera);
+						choice = IMG_CAMERA;
+					}
+					mpu_count = 0;
+					HAL_Delay(5);
+				}
+				else HAL_Delay(10);
+			}  // end of if (rev_flag)
+			else 
+				HAL_Delay(50);
+		}  // end of if (!confirm_flag) {
+		else {  // 确认状态
+				switch (choice) {
+					case IMG_CAMERA:
+						camera_refresh();
 						break;
-					case 1:
-						Gui_Drawimg(0, 0, 320, 240, gImage_call_eat);
-						PlaySong(1);
+					case IMG_EAT:
+						PlaySong(LORD_OF_CINDER);
 						break;
-					case 2:
-						Gui_Drawimg(0, 0, 320, 240, gImage_call_wc);
-						PlaySong(1);
+					case IMG_WC:
+						PlaySong(CITY_OF_TEARS);
 						break;
 					default:
 						break;
 				}
-			}
 		}
-		else
+		
+		if (!mpu_success_flag) {  // 陀螺仪没读到数据时，持续显示加载页面，读一次数据再判断
+			LCD_Clear(WHITE);
+			LCD_ShowString(120,120,16,"Loading...",1);
+			HAL_Delay(20);
+			continue;
+ 		}
+		
+		if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0 && last_infrared == 1)  // 切换到遮挡红外，代表确认或取消
 		{
-			HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_RESET);
+			if (!confirm_flag) {
+				// 马达震动表示确认
+				HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_SET);
+				// 读完陀螺仪数据，切换确认画面
+				switch (choice)
+				{
+					case IMG_CAMERA:
+						Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_camera);
+						break;
+					case IMG_EAT:
+						Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_eat);
+						break;
+					case IMG_WC:
+						Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_wc);
+						break;
+					default:
+						break;
+				}
+				HAL_Delay(100);
+				HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_RESET);
+				HAL_Delay(800);
+				
+				// 震动结束，切换画面
+				switch (choice)
+				{
+					case IMG_EAT:
+						Gui_Drawimg(0, 0, 320, 240, gImage_call_eat);
+						break;
+					case IMG_WC:
+						Gui_Drawimg(0, 0, 320, 240, gImage_call_wc);
+						break;
+					default:
+						break;
+				}
+			}  // end of if(!confirm_flag)
+			confirm_flag = !confirm_flag;
 		}
+		
+		last_infrared = HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin);
 		
     /* USER CODE END WHILE */
 
