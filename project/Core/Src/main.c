@@ -90,6 +90,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	uint8_t mpu_count = 0;
 	uint8_t aRxBuffer = 0;
+	uint8_t choice = 0;
 	unsigned char DMP_INT_FLAG=0;
 	unsigned char rev_flag=0;
   /* USER CODE END 1 */
@@ -123,7 +124,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	LCD_Init();	   //液晶屏初始化
 	HAL_Delay(50);
-	/*HAL_GPIO_WritePin(GPIOC, OV7670_RST_Pin,GPIO_PIN_SET); // before init of OV7670
+	HAL_GPIO_WritePin(GPIOC, OV7670_RST_Pin,GPIO_PIN_SET); // before init of OV7670
 	while(OV7670_Init())//初始化OV7670
 	{
 		LCD_ShowString(100,20,16,"ERROR",1);
@@ -141,7 +142,7 @@ int main(void)
  	//OV7670_Special_Effects(0);
   HAL_GPIO_WritePin(GPIOD, OV7670_OE_Pin, GPIO_PIN_RESET);	
 	LCD_Clear(BLACK);
-	
+	/*
 	//OV7670_colorbar_test();
 	
 	HAL_UART_Receive_IT(&huart3,(unsigned char*)&aRxBuffer,1);
@@ -152,48 +153,106 @@ int main(void)
 		printf("LD3320 init failed\r\n");
 	*/
 	
-	//MPU_6050_Init();// 可以尝试 直接打开FIFO
-	//DMP_INT_FLAG=mpu_dmp_init();//初始化DMP
+	MPU_6050_Init();// 可以尝试 直接打开FIFO
+	DMP_INT_FLAG=mpu_dmp_init();//初始化DMP
 	
+	Gui_Drawimg(0, 0, 320, 240, gImage_choose_camera);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		//PlaySong(2);
-		Gui_Drawimg(0, 0, 320, 240, gImage_choose_eat);
 		//menu_test();
 		//camera_refresh();
 		//LD3320_main();
-    Pic_test();
-		/*if((rev_flag=mpu_dmp_get_data(&pitch,&roll,&yaw))==0)
+    //Pic_test();
+		if((rev_flag=mpu_dmp_get_data(&pitch,&roll,&yaw))==0)
 		{
 			//printf("%.2f, %.2f, %.2f \r\n",pitch,roll,yaw);
 			mpu_count++;
 			if (mpu_count == 10){
-				if (roll < -45) printf("forward\r\n");
-				else if (roll > 45) printf("back\r\n");
-				if (pitch < -45) printf("left\r\n");
-				else if (pitch > 45) printf("right\r\n");
-				if (roll < 30 && roll > -30 && pitch < 30 && pitch > -30) printf("still\r\n");
+				if (roll < -45) 
+				{
+					printf("forward\r\n");
+				}
+				else if (roll > 45) 
+				{
+					printf("back\r\n");
+				}
+				if (pitch < -45) 
+				{
+					printf("left\r\n");
+					Gui_Drawimg(0, 0, 320, 240, gImage_choose_eat);
+					choice = 1;
+				}
+				else if (pitch > 45) 
+				{
+					printf("right\r\n");
+					Gui_Drawimg(0, 0, 320, 240, gImage_choose_wc);
+					choice = 2;
+				}
+				if (roll < 30 && roll > -30 && pitch < 30 && pitch > -30) 
+				{
+					printf("still\r\n");
+					Gui_Drawimg(0, 0, 320, 240, gImage_choose_camera);
+					choice = 0;
+				}
 				mpu_count = 0;
 				HAL_Delay(5);
 			}
 			else HAL_Delay(10);
 		}
-		else HAL_Delay(50);//读取频率不能太慢 防止FIFO溢出
-		*/
-		/*if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin))
+		else HAL_Delay(50);
+		
+		if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0)
 		{
 			HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_SET);
 			HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_SET);
+			switch (choice)
+			{
+				case 0:
+					Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_camera);
+					break;
+				case 1:
+					Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_eat);
+					break;
+				case 2:
+					Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_wc);
+					break;
+				default:
+					break;
+			}
+
+			HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_RESET);
+			HAL_Delay(50);
+			if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0)
+			{
+				switch (choice)
+				{
+					case 0:
+						Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_camera);
+						while (!HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin)) camera_refresh();
+						break;
+					case 1:
+						Gui_Drawimg(0, 0, 320, 240, gImage_call_eat);
+						PlaySong(1);
+						break;
+					case 2:
+						Gui_Drawimg(0, 0, 320, 240, gImage_call_wc);
+						PlaySong(1);
+						break;
+					default:
+						break;
+				}
+			}
 		}
 		else
 		{
 			HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_RESET);
-		}*/
+		}
 		
     /* USER CODE END WHILE */
 
