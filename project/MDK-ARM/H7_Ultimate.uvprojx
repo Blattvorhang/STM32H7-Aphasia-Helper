@@ -10,7 +10,7 @@
       <TargetName>H7_Ultimate</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -137,7 +137,7 @@
             <DriverSelection>4101</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2>BIN\UL2CM3.DLL</Flash2>
+          <Flash2>BIN\UL2V8M.DLL</Flash2>
           <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -186,7 +186,6 @@
             <RvdsVP>3</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
-            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -415,6 +414,11 @@
               <FilePath>../Core/Src/spi.c</FilePath>
             </File>
             <File>
+              <FileName>tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/tim.c</FilePath>
+            </File>
+            <File>
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/usart.c</FilePath>
@@ -585,14 +589,14 @@
               <FilePath>..\Hardware\GUI\lcd.c</FilePath>
             </File>
             <File>
-              <FileName>test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\GUI\test.c</FilePath>
-            </File>
-            <File>
               <FileName>pic.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\GUI\pic.c</FilePath>
+            </File>
+            <File>
+              <FileName>test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\GUI\test.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -608,6 +612,26 @@
               <FileName>sccb.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\SCCB\sccb.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>VOICE</GroupName>
+          <Files>
+            <File>
+              <FileName>LD3320.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\LD3320\LD3320.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>MUSIC</GroupName>
+          <Files>
+            <File>
+              <FileName>music.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Music\music.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -628,21 +652,6 @@
               <FileName>mpu5060.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\mpu5060\mpu5060.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>VOICE</GroupName>
-          <Files>
-            <File>
-              <FileName>LD3320.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\LD3320\LD3320.c</FilePath>
-            </File>
-            <File>
-              <FileName>music.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\Music\music.c</FilePath>
             </File>
           </Files>
         </Group>
