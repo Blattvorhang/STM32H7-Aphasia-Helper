@@ -22,6 +22,9 @@ extern uint8_t nAsrStatus;
 uint8_t  nLD_Mode=LD_MODE_IDLE;
 uint8_t  ucRegVal;
 
+extern uint8_t confirm_flag;
+extern ImageIdx choice;
+
 #define LD3320_SPI	hspi1
 
 /*硬件SPI读写*/
@@ -36,58 +39,10 @@ uint8_t SPI_RreadWrite_Data(uint8_t *tx_data, uint8_t len)
 
 uint8_t LD3320_Init(void)
 {
-	//GPIO_InitTypeDef  GPIO_InitStructure;
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOE_CLK_ENABLE();
 
-//	RCC_APB2PeriphClockCmd(LD3320_SDCK_GPIO_CLK|LD3320_SDO_GPIO_CLK|LD3320_SDI_GPIO_CLK|\
-	LD3320_SCS_GPIO_CLK|LD3320_RSTB_GPIO_CLK|LD3320_IRQ_GPIO_CLK,ENABLE);	 //使能PA端口时钟  | RCC_APB2Periph_AFIO
-	//GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable,ENABLE);//要先开时钟，再重映射；关闭jtag，保留swd。
-//	
-//	
-// 	GPIO_InitStructure.Pin = GPIO_PIN_5;				//端口配置
-// 	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP; 		  //推挽输出
-// 	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-//	HAL_GPIO_Init(GPIOA,&GPIO_InitStructure);
-//	
-//	GPIO_InitStructure.Pin = GPIO_PIN_7;				//端口配置
-// 	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP; 		  //推挽输出
-// 	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-//	HAL_GPIO_Init(GPIOA,&GPIO_InitStructure);
-//	
-//	GPIO_InitStructure.Pin = GPIO_PIN_4;				//端口配置
-// 	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP; 		  //推挽输出
-// 	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-//	HAL_GPIO_Init(GPIOA,&GPIO_InitStructure);
-//	
-//	GPIO_InitStructure.Pin = GPIO_PIN_15;				//端口配置
-// 	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP; 		  //推挽输出
-// 	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-//	HAL_GPIO_Init(GPIOB,&GPIO_InitStructure);
-//	
-//	GPIO_InitStructure.Pin = GPIO_PIN_6;				//端口配置
-// 	GPIO_InitStructure.Mode = GPIO_MODE_INPUT; 		  //推挽输出
-// 	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-//	HAL_GPIO_Init(GPIOA,&GPIO_InitStructure);
-//		
-//	GPIO_InitStructure.Pin = GPIO_PIN_13;				//端口配置
-// 	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP; 		  //推挽输出
-// 	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-//	HAL_GPIO_Init(GPIOB,&GPIO_InitStructure);
-//	
-//	HAL_GPIO_WritePin(LD3320_WR_GPIO_Port,LD3320_WR_Pin,GPIO_PIN_RESET);//拉低WR引脚
-
-//	/* GPIO Ports Clock Enable */
-//	__HAL_RCC_GPIOB_CLK_ENABLE();
-//	  /*Configure GPIO pin : PB12 */
-//  GPIO_InitStructure.Pin = GPIO_PIN_12;
-//  GPIO_InitStructure.Mode = GPIO_MODE_IT_FALLING;
-//  HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
-//	
-//	  /* EXTI interrupt init*/
-//  HAL_NVIC_SetPriority(EXTI15_10_IRQn,2,0);
-//  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 	HAL_Delay(500);
 	
 	HAL_GPIO_WritePin(LD3320_RST_GPIO_Port,LD3320_RST_Pin,GPIO_PIN_SET);//拉低WR引脚
@@ -552,8 +507,8 @@ uint8_t LD_AsrAddFixed(void)
 	uint8_t k, flag;
 	uint8_t nAsrAddLength;
 	
-	#define DATE_A 14   //数组二维数值
-	#define DATE_B 20		//数组一维数值
+	#define DATE_A 10   //数组二维数值
+	#define DATE_B 15		//数组一维数值
 	
 	
 	uint8_t sRecog[DATE_A][DATE_B] = {					
@@ -561,18 +516,14 @@ uint8_t LD_AsrAddFixed(void)
 																		"dai ma ce shi",\
 																		"ce shi wan bi",\
 		
-																		"bei jing",\
-																		"shang hai",\
-																		"kai deng",\
-																		"guan deng",\
+																		"que ren",\
+																		"qu xiao",\
+																		"chi fan",\
+																		"ce suo",\
 		
-																		"guang zhou",\
-																		"shen zhen",\
-																		"xiang zuo zhuan",\
-																		"xiang you zhuan",\
+																		"shui",\
+																		"zhao dong xi",\
 		
-																		"da kai kong tiao",\
-																		"guan bi kong tiao",\
 																		"bu shi ge men",\
 																 };	/*添加关键词，用户修改*/
 	uint8_t pCode[DATE_A] = {
@@ -587,11 +538,7 @@ uint8_t LD_AsrAddFixed(void)
 		
 													CODE_2KL1,\
 		                      CODE_2KL2,\
-		                      CODE_2KL3,\
-		                      CODE_2KL4,\
 		
-													CODE_3KL1,\
-		                      CODE_3KL2,\
 													CODE_5KL1,
 												};	/*添加识别码，用户修改*/	
 	flag = 1;
@@ -637,48 +584,45 @@ void User_Modification(uint8_t dat)
 		switch(nAsrRes)		   /*对结果执行相关操作,客户修改*/
 		{
 			case CODE_DMCS:			/*命令“代码测试”*/
-					printf(" dai ma ce shi successed\r\n"); /*text.....*/
-												break;
+					printf(" code test succeeded\r\n"); /*text.....*/
+					break;
 			case CODE_CSWB:			/*命令“测试完毕”*/
-					printf(" ce shi wan bi successed\r\n"); /*text.....*/
-												break;
+					printf(" test finish succeeded\r\n"); /*text.....*/
+					break;
 			
-			case CODE_1KL1:	 /*命令“北京”*/
-					printf(" ni hao xiao V successed\r\n"); /*text.....*/
-												break;
-			case CODE_1KL2:		/*命令“上海”*/
-		
-					printf(" shang hai successed\r\n"); /*text.....*/
-												break;
-			case CODE_1KL3:	 /*命令“开灯”*/
-					printf(" kai deng successed\r\n"); /*text.....*/
-												break;
-			case CODE_1KL4:		/*命令“关灯”*/				
-					printf(" guan deng successed\r\n"); /*text.....*/
-												break;
+			case CODE_1KL1:	 /*命令“确认”*/
+					printf(" confirm succeeded\r\n"); /*text.....*/
+					confirm_flag = 1;
+					break;
+			case CODE_1KL2:		/*命令“取消”*/
+					printf(" cancel succeeded\r\n"); /*text.....*/
+					confirm_flag = 0;
+					break;
+			case CODE_1KL3:	 /*命令“吃饭”*/
+					printf(" eat succeeded\r\n"); /*text.....*/
+					confirm_flag = 1;
+					choice = IMG_EAT;
+					break;
+			case CODE_1KL4:		/*命令“厕所”*/				
+					printf(" WC succeeded\r\n"); /*text.....*/
+					confirm_flag = 1;
+					choice = IMG_WC;
+					break;
 			
-			case CODE_2KL1:	 /*命令“....”*/
-					printf(" guang zhou successed\r\n"); /*text.....*/
-												break;
-			case CODE_2KL2:	 /*命令“....”*/
-					printf(" shen zhen successed\r\n"); /*text.....*/
-												break;
-			case CODE_2KL3:	 /*命令“....”*/
-					printf(" xiang zuo zhuan successed\r\n"); /*text.....*/
-												break;
-			case CODE_2KL4:	 /*命令“....”*/
-					printf(" xiang you zhuan successed\r\n"); /*text.....*/
-															break;
+			case CODE_2KL1:	 /*命令“水”*/
+					printf(" water succeeded\r\n"); /*text.....*/
+					confirm_flag = 1;
+					choice = IMG_EAT;
+					break;
+			case CODE_2KL2:	 /*命令“找东西”*/
+					printf(" find succeeded\r\n"); /*text.....*/
+					confirm_flag = 1;
+					choice = IMG_CAMERA;
+					break;
 						
-			case CODE_3KL1:	 /*命令“....”*/
-					printf(" da kai kong tiao successed\r\n"); /*text.....*/
-												break;
-			case CODE_3KL2:	 /*命令“....”*/
-					printf(" guan bi kong tiao successed\r\n"); /*text.....*/
-												break;
-			case CODE_5KL1:	 /*命令“....”*/
-					printf(" bu shi ge men successed\r\n"); /*text.....*/
-												break;
+			case CODE_5KL1:	 /*命令“不是哥们”*/
+					printf(" bushi gemen succeeded\r\n"); /*text.....*/
+					break;
 //		case CODE_3KL4:	 /*命令“....”*/
 //				printf("\"代码测试\"识别成功"); /*text.....*/
 //											break;
@@ -704,6 +648,7 @@ void User_Modification(uint8_t dat)
 
 void LD3320_main(void)
 {
+	uint8_t end_flag = 0;
 	nAsrStatus = LD_ASR_NONE;		//	初始状态：没有在作ASR
 	//CS_LOW;
 	printf("identifying...\r\n");
@@ -728,6 +673,7 @@ void LD3320_main(void)
 			{
 				nAsrRes = LD_GetResult();		/*获取结果*/												
 				User_Modification(nAsrRes);
+				end_flag = 1;
 				nAsrStatus = LD_ASR_NONE;
 				break;
 			}
@@ -738,8 +684,8 @@ void LD3320_main(void)
 				break;
 			}
 		} 
+		if (end_flag) break;
 	}
-	
 }
 
 

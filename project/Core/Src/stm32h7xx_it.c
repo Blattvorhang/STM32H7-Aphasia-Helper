@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ov7670.h"
+#include "mpu5060.h"
 #include <stdio.h>
 /* USER CODE END Includes */
 
@@ -44,6 +45,9 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 uint8_t ov_sta;
+extern float pitch,roll,yaw;
+extern unsigned char rev_flag;
+extern unsigned char mpu_count;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,6 +62,7 @@ uint8_t ov_sta;
 
 /* External variables --------------------------------------------------------*/
 extern I2C_HandleTypeDef hi2c1;
+extern TIM_HandleTypeDef htim7;
 extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
 
@@ -224,7 +229,7 @@ void EXTI3_IRQHandler(void)
 	HAL_GPIO_WritePin(GPIOF, OV7670_WRST_Pin, GPIO_PIN_RESET);	//复位写指针		  		 
 	HAL_GPIO_WritePin(GPIOF, OV7670_WRST_Pin, GPIO_PIN_SET);	
 	HAL_GPIO_WritePin(GPIOF, OV7670_WREN_Pin, GPIO_PIN_SET);	//允许写入FIFO 	 
-	ov_sta++;		//帧中断加1 
+	ov_sta++;		//帧+1 
 	//printf("IRQ: %d\r\n", ov_sta);
 	//__HAL_GPIO_EXTI_CLEAR_IT(OV7670_VSYNC_Pin);
   /* USER CODE END EXTI3_IRQn 0 */
@@ -274,6 +279,23 @@ void USART3_IRQHandler(void)
   /* USER CODE BEGIN USART3_IRQn 1 */
 
   /* USER CODE END USART3_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM7 global interrupt.
+  */
+void TIM7_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM7_IRQn 0 */
+  // 定时器读陀螺仪数据，读太慢/不规律可能导致FIFO溢出
+	if((rev_flag = mpu_dmp_get_data(&pitch,&roll,&yaw)) == 0)
+		;
+	else mpu_count++;
+  /* USER CODE END TIM7_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim7);
+  /* USER CODE BEGIN TIM7_IRQn 1 */
+
+  /* USER CODE END TIM7_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

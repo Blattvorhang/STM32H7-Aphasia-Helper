@@ -20,6 +20,7 @@
 #include "main.h"
 #include "i2c.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "usb_otg.h"
 #include "gpio.h"
@@ -42,11 +43,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-typedef enum {
-	IMG_CAMERA = 0,
-	IMG_EAT,
-	IMG_WC
-} ImageIdx;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -65,10 +62,14 @@ typedef enum {
 extern uint8_t ov_sta;	//在stm32h7xx_it里面定义
 uint16_t screen_buffer[240][320];
 signed char gyro_orientation[9] = { 1, 0, 0,
-                                           0, 1, 0,
-                                           0, 0, 1};
-
+                                    0, 1, 0,
+                                    0, 0, 1};
 extern float pitch,roll,yaw; 		//欧拉角
+uint8_t mpu_count = 0;
+uint8_t rev_flag = 0;						
+																		
+uint8_t confirm_flag = 0;
+ImageIdx choice = IMG_CAMERA;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -78,6 +79,7 @@ void PeriphCommonClock_Config(void);
 int fputc(int ch, FILE *f);
 int fgetc(FILE *f);
 void camera_refresh(void);
+void ChioceConfirm(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -92,15 +94,8 @@ void camera_refresh(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	uint8_t mpu_count = 0;
-	uint8_t aRxBuffer = 0;
-	uint8_t DMP_INT_FLAG = 0;
-	uint8_t rev_flag = 0;
-	uint8_t confirm_flag = 0;
 	uint8_t last_infrared = 0;
 	uint8_t mpu_success_flag = 0;  // 表示陀螺仪成功读到数据，一旦成功一次，后续基本都可以持续读数据
-	
-	ImageIdx choice = IMG_CAMERA;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -129,109 +124,93 @@ int main(void)
   MX_SPI3_Init();
   MX_SPI1_Init();
   MX_I2C1_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
 	LCD_Init();	   //液晶屏初始化
 	HAL_Delay(50);
+	
 	HAL_GPIO_WritePin(GPIOC, OV7670_RST_Pin,GPIO_PIN_SET); // before init of OV7670
 	while(OV7670_Init())//初始化OV7670
 	{
 		LCD_ShowString(100,20,16,"ERROR",1);
 		delay_ms(200);
 		LCD_Fill(0,80,239,206,BLACK);
-		delay_ms(200);
-		LCD_Fill(0,80,239,206,BLUE);
 	}
 	LCD_ShowString(200,200,16,"ok",1);     
 	delay_ms(200);	 
 	OV7670_Light_Mode(4);
+	OV7670_Brightness(4);	
 	//OV7670_Color_Saturation(2);
-	OV7670_Brightness(4);
 	//OV7670_Contrast(2);
  	//OV7670_Special_Effects(0);
   HAL_GPIO_WritePin(GPIOD, OV7670_OE_Pin, GPIO_PIN_RESET);	
 	LCD_Clear(BLACK);
-	/*
-	//OV7670_colorbar_test();
-	
-	HAL_UART_Receive_IT(&huart3,(unsigned char*)&aRxBuffer,1);
 
-	if(!LD3320_Init())
-		printf("LD3320 init successed\r\n");
-	else 
-		printf("LD3320 init failed\r\n");
-	*/
+	LD3320_Init();
 	
 	MPU_6050_Init();// 可以尝试 直接打开FIFO
-	DMP_INT_FLAG=mpu_dmp_init();//初始化DMP
-	
+	mpu_dmp_init();//初始化DMP
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		//menu_test();
-		//camera_refresh();
-		//LD3320_main();
-    //Pic_test();
-		
 		/* 非确认状态 */
-		if (!confirm_flag) {			
+		if (!confirm_flag) {		
 			// 读取陀螺仪数据
-			if((rev_flag=mpu_dmp_get_data(&pitch,&roll,&yaw)) == 0)
+			if(!rev_flag)
 			{
 				mpu_success_flag = 1;
 				//printf("%.2f, %.2f, %.2f \r\n",pitch,roll,yaw);
-				mpu_count++;
-				if (mpu_count == 10){
-					if (roll < -45) 
-					{
-						printf("forward\r\n");
-					}
-					else if (roll > 45) 
-					{
-						printf("back\r\n");
-					}
-					if (pitch < -45) 
-					{
-						printf("left\r\n");
-						Gui_Drawimg(0, 0, 320, 240, gImage_choose_eat);
-						choice = IMG_EAT;
-					}
-					else if (pitch > 45) 
-					{
-						printf("right\r\n");
-						Gui_Drawimg(0, 0, 320, 240, gImage_choose_wc);
-						choice = IMG_WC;
-					}
-					if (roll < 30 && roll > -30 && pitch < 30 && pitch > -30) 
-					{
-						printf("still\r\n");
-						Gui_Drawimg(0, 0, 320, 240, gImage_choose_camera);
-						choice = IMG_CAMERA;
-					}
+				if (roll < -45) 
+					printf("forward\r\n");
+				else if (roll > 45) 
+					printf("back\r\n");
+				if (pitch < -45) 
+				{
+					printf("left\r\n");
+					Gui_Drawimg(0, 0, 320, 240, gImage_choose_eat);
+					choice = IMG_EAT;
+				}
+				else if (pitch > 45) 
+				{
+					printf("right\r\n");
+					Gui_Drawimg(0, 0, 320, 240, gImage_choose_wc);
+					choice = IMG_WC;
+				}
+				if (roll < 30 && roll > -30 && pitch < 30 && pitch > -30) 
+				{
+					printf("still\r\n");
+					Gui_Drawimg(0, 0, 320, 240, gImage_choose_camera);
+					choice = IMG_CAMERA;
+				}
+			}  
+			else {
+				if (mpu_count >= 8) {
+					printf("rev_flag %d\n",rev_flag);
 					mpu_count = 0;
-					HAL_Delay(5);
 				}
-				else HAL_Delay(10);
-			}  // end of if (rev_flag)
-			else 
-				HAL_Delay(50);
-		}  // end of if (!confirm_flag) {
+			}// end of if (!rev_flag)
+			HAL_Delay(50);
+		}  // end of if (!confirm_flag) 
+		
 		else {  // 确认状态
-				switch (choice) {
-					case IMG_CAMERA:
-						camera_refresh();
-						break;
-					case IMG_EAT:
-						PlaySong(LORD_OF_CINDER);
-						break;
-					case IMG_WC:
-						PlaySong(CITY_OF_TEARS);
-						break;
-					default:
-						break;
-				}
+			HAL_TIM_Base_Stop_IT(&htim7); // 关闭陀螺仪的定时器中断，便于执行代码的顺利运行
+			switch (choice) {
+				case IMG_CAMERA:
+					camera_refresh();
+					break;
+				case IMG_EAT:
+					PlaySong(LORD_OF_CINDER);
+					break;
+				case IMG_WC:
+					PlaySong(CITY_OF_TEARS);
+					break;
+				default:
+					break;
+			}
+			HAL_TIM_Base_Start_IT(&htim7); // 恢复定时器中断
 		}
 		
 		if (!mpu_success_flag) {  // 陀螺仪没读到数据时，持续显示加载页面，读一次数据再判断
@@ -240,49 +219,23 @@ int main(void)
 			HAL_Delay(20);
 			continue;
  		}
-		
-		if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0 && last_infrared == 1)  // 切换到遮挡红外，代表确认或取消
+
+		// 切换到遮挡红外，代表确认或取消
+		if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0 && last_infrared == 1) 
 		{
-			if (!confirm_flag) {
-				// 马达震动表示确认
-				HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_SET);
-				HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_SET);
-				// 读完陀螺仪数据，切换确认画面
-				switch (choice)
-				{
-					case IMG_CAMERA:
-						Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_camera);
-						break;
-					case IMG_EAT:
-						Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_eat);
-						break;
-					case IMG_WC:
-						Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_wc);
-						break;
-					default:
-						break;
-				}
-				HAL_Delay(100);
-				HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_RESET);
-				HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_RESET);
-				HAL_Delay(800);
-				
-				// 震动结束，切换画面
-				switch (choice)
-				{
-					case IMG_EAT:
-						Gui_Drawimg(0, 0, 320, 240, gImage_call_eat);
-						break;
-					case IMG_WC:
-						Gui_Drawimg(0, 0, 320, 240, gImage_call_wc);
-						break;
-					default:
-						break;
-				}
-			}  // end of if(!confirm_flag)
+			if (!confirm_flag) 
+				ChioceConfirm();
 			confirm_flag = !confirm_flag;
 		}
-		
+		/*
+		// 如果没有遮挡红外，调用语音模块作为default，直接修改confirm_flag和choice
+		else if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin)) 
+		{
+			LD3320_main();
+			if (confirm_flag) 
+				ChioceConfirm();
+		}
+		*/
 		last_infrared = HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin);
 		
     /* USER CODE END WHILE */
@@ -387,7 +340,6 @@ int fputc(int ch, FILE *f)
   return ch;
 }
  
-
 int fgetc(FILE *f)
 {
   uint8_t ch = 0;
@@ -403,7 +355,6 @@ void camera_refresh(void)
 	if(ov_sta)//有帧中断更新？
 	{
 		OV_EXTI_Control(DISABLE);
-		
 		LCD_SetWindows(0,0,lcddev.width-1,lcddev.height-1);
 		
 		OV7670_RRST_L;				//开始复位读指针 
@@ -442,6 +393,45 @@ void camera_refresh(void)
 		__HAL_GPIO_EXTI_CLEAR_IT(OV7670_VSYNC_Pin);
  		ov_sta=0;					//下一次扫描
 	} 
+}
+
+void ChioceConfirm(void)
+{
+	// 马达震动表示确认
+	HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_SET);
+	// 读完陀螺仪数据，切换确认画面
+	switch (choice)
+	{
+		case IMG_CAMERA:
+			Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_camera);
+			break;
+		case IMG_EAT:
+			Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_eat);
+			break;
+		case IMG_WC:
+			Gui_Drawimg(0, 0, 320, 240, gImage_comfirm_wc);
+			break;
+		default:
+			break;
+	}
+	HAL_Delay(100);
+	HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(MOTOR_2_GPIO_Port, MOTOR_2_Pin, GPIO_PIN_RESET);
+	HAL_Delay(800);
+	
+	// 震动结束，切换画面
+	switch (choice)
+	{
+		case IMG_EAT:
+			Gui_Drawimg(0, 0, 320, 240, gImage_call_eat);
+			break;
+		case IMG_WC:
+			Gui_Drawimg(0, 0, 320, 240, gImage_call_wc);
+			break;
+		default:
+			break;
+	}
 }
 
 /* USER CODE END 4 */

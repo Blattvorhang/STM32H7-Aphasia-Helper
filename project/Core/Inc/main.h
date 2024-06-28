@@ -36,7 +36,11 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef enum {
+	IMG_CAMERA = 0,
+	IMG_EAT,
+	IMG_WC
+} ImageIdx;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
