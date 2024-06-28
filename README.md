@@ -1,5 +1,5 @@
-# STM32H7 Stroke Helper
-中风患者辅助设备
+# STM32H7 Aphasia Helper
+失语症患者辅助设备
 
 ## Hardware
 - STM32H7A3ZI-Q
@@ -28,4 +28,7 @@
 - Target: Use MicroLIB
 - Debug: ST-Link Debugger
 
-# Citation
+## References
+- [Hardware SPI Register](https://www.armbbs.cn/forum.php?mod=viewthread&tid=117991)
+- [RGB565 to RGB888](https://stackoverflow.com/questions/2442576/how-does-one-convert-16-bit-rgb565-to-24-bit-rgb888)
+- [X-Cube-AI MCUNet](https://github.com/mit-han-lab/mcunet)
