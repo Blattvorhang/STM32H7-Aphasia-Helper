@@ -130,8 +130,9 @@ extern u16  BACK_COLOR; //背景颜色.默认为白色
 #define GRAY1       0x8410      	//灰色1      00000 000000 00000
 #define GRAY2       0x4208 
 //GUI颜色
-
-#define DARKBLUE      	 0X01CF	//深蓝色
+#define DARKYELLOW       0XF6C2 //深黄色
+#define DARKGREEN      	 0X1689	//深绿色
+#define DARKBLUE      	 0X74BA	//深蓝色
 #define LIGHTBLUE      	 0X7D7C	//浅蓝色  
 #define GRAYBLUE       	 0X5458 //灰蓝色
 //以上三色为PANEL的颜色 
