@@ -3,6 +3,9 @@
 #include "sys.h"
 #include "main.h"
 
+// 96MHz: 96/8 = 12, 280MHz: 280/8 = 35
+#define ticknumber 35*10
+
 //#define SCCB_SCL_L    		HAL_GPIO_WritePin(GPIOE,SCCB_SCL_Pin,GPIO_PIN_RESET)
 //#define SCCB_SCL_H    		HAL_GPIO_WritePin(GPIOE,SCCB_SCL_Pin,GPIO_PIN_SET)
 //#define SCCB_SDA_L    		HAL_GPIO_WritePin(GPIOE,SCCB_SDA_Pin,GPIO_PIN_RESET)
@@ -37,8 +40,6 @@ uint8_t SCCB_RD_Reg(uint8_t reg);
 
 void SCCB_SDA_IN(void);
 void SCCB_SDA_OUT(void);
-
-#define ticknumber 12*10
 
 void SCCB_Rst(void);
 

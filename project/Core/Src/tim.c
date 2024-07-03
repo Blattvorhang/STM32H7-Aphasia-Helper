@@ -40,7 +40,7 @@ void MX_TIM7_Init(void)
 
   /* USER CODE END TIM7_Init 1 */
   htim7.Instance = TIM7;
-  htim7.Init.Prescaler = 96-1;
+  htim7.Init.Prescaler = 280-1;
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim7.Init.Period = 40000-1;
   htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
@@ -55,7 +55,7 @@ void MX_TIM7_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM7_Init 2 */
-	HAL_TIM_Base_Start_IT(&htim7); // 开启定时器中断
+	HAL_TIM_Base_Start_IT(&htim7); // �?启定时器中断
   /* USER CODE END TIM7_Init 2 */
 
 }

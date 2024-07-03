@@ -10,7 +10,7 @@
       <TargetName>H7_Ultimate</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -134,11 +134,11 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4096</DriverSelection>
+            <DriverSelection>4101</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash2>BIN\UL2V8M.DLL</Flash2>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -186,11 +186,10 @@
             <RvdsVP>3</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
-            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>1</useUlib>
+            <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -340,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H7A3xxQ</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\Hardware\GUI;..\Hardware\LD3320;..\Hardware\Music;..\Hardware\SCCB;..\Hardware\SYSTEM;..\Hardware\mpu6050</IncludePath>
+              <IncludePath>../Core/Inc;..\X-CUBE-AI\App;..\X-CUBE-AI;..\X-CUBE-AI\Target;..\Middlewares\ST\AI\Inc;..\X-CUBE-AI\App;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\Hardware\GUI;..\Hardware\LD3320;..\Hardware\mpu6050;..\Hardware\Music;..\Hardware\SCCB;..\Hardware\SYSTEM</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -392,6 +391,96 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Application/User/X-CUBE-AI/App</GroupName>
+          <Files>
+            <File>
+              <FileName>ai_device_adaptor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\ai_device_adaptor.c</FilePath>
+            </File>
+            <File>
+              <FileName>aiPbIO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\aiPbIO.c</FilePath>
+            </File>
+            <File>
+              <FileName>aiPbMemRWServices.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\aiPbMemRWServices.c</FilePath>
+            </File>
+            <File>
+              <FileName>aiPbMgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\aiPbMgr.c</FilePath>
+            </File>
+            <File>
+              <FileName>aiTestHelper.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\aiTestHelper.c</FilePath>
+            </File>
+            <File>
+              <FileName>aiTestUtility.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\aiTestUtility.c</FilePath>
+            </File>
+            <File>
+              <FileName>aiValidation.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\aiValidation.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_x-cube-ai.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\app_x-cube-ai.c</FilePath>
+            </File>
+            <File>
+              <FileName>lc_print.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\lc_print.c</FilePath>
+            </File>
+            <File>
+              <FileName>network.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\network.c</FilePath>
+            </File>
+            <File>
+              <FileName>network_data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\network_data.c</FilePath>
+            </File>
+            <File>
+              <FileName>network_data_params.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\network_data_params.c</FilePath>
+            </File>
+            <File>
+              <FileName>pb_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\pb_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>pb_decode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\pb_decode.c</FilePath>
+            </File>
+            <File>
+              <FileName>pb_encode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\pb_encode.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32msg.pb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\stm32msg.pb.c</FilePath>
+            </File>
+            <File>
+              <FileName>syscalls.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\X-CUBE-AI\App\syscalls.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>Application/User/Core</GroupName>
           <Files>
             <File>
@@ -438,6 +527,16 @@
               <FileName>stm32h7xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32h7xx_hal_msp.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Doc</GroupName>
+          <Files>
+            <File>
+              <FileName>network_generate_report.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>X-CUBE-AI/App/network_generate_report.txt</FilePath>
             </File>
           </Files>
         </Group>
@@ -567,12 +666,37 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Lib</GroupName>
+          <Files>
+            <File>
+              <FileName>NetworkRuntime900_CM7_Keil.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\Middlewares\ST\AI\Lib\NetworkRuntime900_CM7_Keil.lib</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>SYS</GroupName>
           <Files>
             <File>
               <FileName>delay.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\SYSTEM\delay.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>CAM</GroupName>
+          <Files>
+            <File>
+              <FileName>ov7670.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\SCCB\ov7670.c</FilePath>
+            </File>
+            <File>
+              <FileName>sccb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\SCCB\sccb.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -602,17 +726,22 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>CAM</GroupName>
+          <GroupName>MPU</GroupName>
           <Files>
             <File>
-              <FileName>ov7670.c</FileName>
+              <FileName>inv_mpu.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Hardware\SCCB\ov7670.c</FilePath>
+              <FilePath>..\Hardware\mpu6050\inv_mpu.c</FilePath>
             </File>
             <File>
-              <FileName>sccb.c</FileName>
+              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Hardware\SCCB\sccb.c</FilePath>
+              <FilePath>..\Hardware\mpu6050\inv_mpu_dmp_motion_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>mpu6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\mpu6050\mpu6050.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -633,26 +762,6 @@
               <FileName>music.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\Music\music.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>MPU</GroupName>
-          <Files>
-            <File>
-              <FileName>mpu6050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\mpu6050\mpu6050.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\mpu6050\inv_mpu.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\mpu6050\inv_mpu_dmp_motion_driver.c</FilePath>
             </File>
           </Files>
         </Group>
