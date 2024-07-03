@@ -1,6 +1,8 @@
 #ifndef __PIC_H
 #define __PIC_H 
 
+#include "sys.h"
+
 void UI_Button(u16 x1,u16 y1,u16 x2,u16 y2);
 void UI_menu(void);
 void UI_menu_select_eat(void);

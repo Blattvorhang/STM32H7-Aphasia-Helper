@@ -40,6 +40,8 @@
 #include "inv_mpu_dmp_motion_driver.h" 
 #include "mpu6050.h"
 #include "music.h"
+#include "ai_model.h"
+#include "data_processing.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -65,7 +67,7 @@ uint16_t screen_buffer[240][320];
 signed char gyro_orientation[9] = { 1,  0,  0,
                                     0, -1,  0,
                                     0,  0, -1};
-extern float pitch,roll,yaw; 		//欧拉角
+extern float pitch, roll, yaw; 		//欧拉角
 uint8_t mpu_count = 0;
 uint8_t rev_flag = 0;						
 																		
@@ -387,6 +389,9 @@ void camera_refresh(void)
 		for(i = 0; i < 240; i++)
 			for(j = 0; j < 320; j++)
 				Lcd_WriteData_16Bit(screen_buffer[i][j]);
+		
+		aiInference(); //读到一帧画面后开始识别，在此期间外部中断禁用
+		HAL_Delay(500);
 		
 		//ov_frame++;
 		//printf("Frame:%d\r\n", ov_frame);

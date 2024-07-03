@@ -10,7 +10,7 @@
       <TargetName>H7_Ultimate</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -186,6 +186,7 @@
             <RvdsVP>3</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -339,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H7A3xxQ</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;..\X-CUBE-AI\App;..\X-CUBE-AI;..\X-CUBE-AI\Target;..\Middlewares\ST\AI\Inc;..\X-CUBE-AI\App;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\Hardware\GUI;..\Hardware\LD3320;..\Hardware\mpu6050;..\Hardware\Music;..\Hardware\SCCB;..\Hardware\SYSTEM</IncludePath>
+              <IncludePath>../Core/Inc;..\X-CUBE-AI\App;..\X-CUBE-AI;..\X-CUBE-AI\Target;..\Middlewares\ST\AI\Inc;..\X-CUBE-AI\App;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\Hardware\GUI;..\Hardware\LD3320;..\Hardware\mpu6050;..\Hardware\Music;..\Hardware\SCCB;..\Hardware\SYSTEM;..\AI-run</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -762,6 +763,26 @@
               <FileName>music.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\Music\music.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>AI</GroupName>
+          <Files>
+            <File>
+              <FileName>ai_model.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\AI-run\ai_model.c</FilePath>
+            </File>
+            <File>
+              <FileName>class_mapping.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\AI-run\class_mapping.c</FilePath>
+            </File>
+            <File>
+              <FileName>data_processing.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\AI-run\data_processing.c</FilePath>
             </File>
           </Files>
         </Group>
