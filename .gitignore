@@ -106,3 +106,6 @@ Examples/
 *.l1p
 *.l2p
 *.iex
+
+# Cube-AI
+!NetworkRuntime900_CM7_Keil.lib
