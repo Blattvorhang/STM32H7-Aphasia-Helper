@@ -223,7 +223,8 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 void SPI3_WriteByte(uint8_t Byte)
 {
 	//HAL_SPI_Transmit(&hspi3, &Byte, 1, HAL_MAX_DELAY);
-
+	
+	/*
 	SPI3->CR1|=1<<0;                          //SPE=1,使能SPI3
 	SPI3->CR1|=1<<9;                          //CSTART=1,启动传输
 	// SPI3->CR2=0x01;
@@ -232,5 +233,22 @@ void SPI3_WriteByte(uint8_t Byte)
 
 	SPI3->IFCR|=3<<3;                         //EOTC和TXTFC置1,清除EOT和TXTFC位
 	SPI3->CR1&=~(1<<0);                       //SPE=0,关闭SPI4,会执行状态机复位/FIFO重置等操作
+	*/
+	
+	SPI3->CFG1 = SPI_BAUDRATEPRESCALER_8 | 7;
+	SPI3->CR1 = SPI_CR1_SSI;
+	SPI3->CR2 = 1;
+	SPI3->CR1 = SPI_CR1_SPE | SPI_CR1_SSI;
+	SPI3->CR1 = SPI_CR1_SPE | SPI_CR1_SSI | SPI_CR1_CSTART;
+
+	while ((SPI3->SR & SPI_FLAG_TXE) == 0);
+
+	*((__IO uint8_t *)&SPI3->TXDR) = Byte;
+			
+	while ((SPI3->SR & SPI_SR_TXC) == 0);
+			
+	SPI3->IFCR = SPI_IFCR_EOTC | SPI_IFCR_TXTFC;
+			
+	SPI3->CR1 &= ~(SPI_CR1_SPE);
 }
 /* USER CODE END 1 */

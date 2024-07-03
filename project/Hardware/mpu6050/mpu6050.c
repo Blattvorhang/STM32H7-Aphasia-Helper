@@ -1,4 +1,4 @@
-#include "mpu5060.h"
+#include "mpu6050.h"
 
 float pitch,roll,yaw;
 extern signed char gyro_orientation[9];

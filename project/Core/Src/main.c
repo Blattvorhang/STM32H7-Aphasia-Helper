@@ -37,7 +37,7 @@
 #include "LD3320.h"
 #include "inv_mpu.h"
 #include "inv_mpu_dmp_motion_driver.h" 
-#include "mpu5060.h"
+#include "mpu6050.h"
 #include "music.h"
 /* USER CODE END Includes */
 
@@ -95,7 +95,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	uint8_t last_infrared = 0;
-	uint8_t last_choice = -1;
+	ImageIdx last_choice = NO_CHOICE;
 	uint8_t mpu_success_flag = 0;  // 表示陀螺仪成功读到数据，一旦成功一次，后续基本都可以持续读数据
   /* USER CODE END 1 */
 
@@ -229,7 +229,7 @@ int main(void)
 		if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0 && last_infrared == 1) 
 		{
 			if (!confirm_flag){
-				last_choice = -1;
+				last_choice = NO_CHOICE;
 				ChioceConfirm();
 			}
 			confirm_flag = !confirm_flag;

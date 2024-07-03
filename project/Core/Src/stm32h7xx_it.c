@@ -23,7 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ov7670.h"
-#include "mpu5060.h"
+#include "mpu6050.h"
 #include <stdio.h>
 /* USER CODE END Includes */
 

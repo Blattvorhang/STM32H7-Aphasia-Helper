@@ -39,7 +39,8 @@ extern "C" {
 typedef enum {
 	IMG_CAMERA = 0,
 	IMG_EAT,
-	IMG_WC
+	IMG_WC,
+	NO_CHOICE
 } ImageIdx;
 /* USER CODE END ET */
 
