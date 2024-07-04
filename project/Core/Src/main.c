@@ -171,25 +171,27 @@ int main(void)
 			{
 				mpu_success_flag = 1;
 				//printf("%.2f, %.2f, %.2f \r\n",pitch,roll,yaw);
-				if (roll < -45) 
+				const float angle_threshold = 30;
+				if (roll < -angle_threshold) 
 					printf("forward\r\n");
-				else if (roll > 45) 
+				else if (roll > angle_threshold) 
 					printf("back\r\n");
-				if (pitch < -45) 
+				if (pitch < -angle_threshold) 
 				{
 					printf("left\r\n");
 					choice = IMG_EAT;	
 					if (choice != last_choice)
 						UI_menu_select_eat();
 				}
-				else if (pitch > 45) 
+				else if (pitch > angle_threshold) 
 				{
 					printf("right\r\n");
 					choice = IMG_WC;
 					if (choice != last_choice)
 						UI_menu_select_wc();
 				}
-				if (roll < 30 && roll > -30 && pitch < 30 && pitch > -30) 
+				if (roll < angle_threshold && roll > -angle_threshold &&
+					  pitch < angle_threshold && pitch > -angle_threshold) 
 				{
 					printf("still\r\n");
 					choice = IMG_CAMERA;
