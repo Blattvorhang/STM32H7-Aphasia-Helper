@@ -476,7 +476,7 @@ const char *class_name[1000] = {
     "cardigan",                       // 474
     "car mirror",                     // 475
     "carousel",                       // 476
-    "carpenter’s kit",                // 477
+    "carpenter's kit",                // 477
     "carton",                         // 478
     "car wheel",                      // 479
     "cash machine",                   // 480
@@ -985,7 +985,7 @@ const char *class_name[1000] = {
     "scuba diver",                    // 983
     "rapeseed",                       // 984
     "daisy",                          // 985
-    "yellow lady’s slipper",          // 986
+    "yellow lady's slipper",          // 986
     "corn",                           // 987
     "acorn",                          // 988
     "hip",                            // 989
