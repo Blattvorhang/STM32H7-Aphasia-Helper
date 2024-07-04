@@ -7,12 +7,12 @@
 #include "gui.h"
 #include "test.h"
 
-#define WIDTH 320
+#define WIDTH 240
 #define HEIGHT 240
 #define NEW_WIDTH 160
-#define NEW_HEIGHT NEW_WIDTH
+#define NEW_HEIGHT 160
 
-extern uint16_t screen_buffer[240][320];
+extern uint16_t screen_buffer[WIDTH][HEIGHT];
 
 void RGB565_to_RGB888(uint16_t rgb565, uint8_t *r, uint8_t *g, uint8_t *b)
 {
@@ -92,11 +92,11 @@ void copy_data(uint8_t *src, uint8_t *dst, int size)
 void acquire_and_process_data(int8_t *data)
 {
     // Use static variables to avoid allocating memory on the stack
+  	// Read the RGB565 format image data
     static uint16_t *rgb565_data = (uint16_t *)screen_buffer; //WIDTH * HEIGHT;
     static uint8_t src_img[WIDTH * HEIGHT * 3];
-    static uint8_t dst_img[WIDTH * HEIGHT * 3];
-	
-    // Read the RGB565 format image data
+    static uint8_t dst_img[NEW_WIDTH * NEW_HEIGHT * 3];
+    
     uint32_t i;
 
     // Convert RGB565 to RGB888
@@ -105,12 +105,12 @@ void acquire_and_process_data(int8_t *data)
         RGB565_to_RGB888(rgb565_data[i], &src_img[i * 3 + 0], &src_img[i * 3 + 1], &src_img[i * 3 + 2]);
     }
 
-    const int min_size = WIDTH < HEIGHT ? WIDTH : HEIGHT;
-    crop(src_img, dst_img, WIDTH, HEIGHT, min_size, min_size);
+    // const int min_size = WIDTH < HEIGHT ? WIDTH : HEIGHT;
+    // crop(src_img, dst_img, WIDTH, HEIGHT, min_size, min_size);
 
-    copy_data(dst_img, src_img, min_size * min_size * 3);
+    // copy_data(dst_img, src_img, min_size * min_size * 3);
 
-    resize(src_img, dst_img, min_size, min_size, NEW_WIDTH, NEW_HEIGHT);
+    resize(src_img, dst_img, WIDTH, HEIGHT, NEW_WIDTH, NEW_HEIGHT);
 
     // Convert RGB888 to int8 format
     normalize_and_convert_to_int8(dst_img, data, NEW_WIDTH, NEW_HEIGHT);
@@ -133,9 +133,9 @@ void post_process(const int8_t *data)
     }
     printf("Prediction: %d %s\n", max_index, class_name[max_index]);
 		
-		sprintf(class_str, "%d %s", max_index, class_name[max_index]);
-		Show_Str(20, 17, WHITE, DARKBLUE, (u8 *)class_str, 16, 1);
+    sprintf(class_str, "%d %s", max_index, class_name[max_index]);
+    Show_Str(45, 17, WHITE, DARKBLUE, (u8 *)class_str, 16, 1);
 		
-    //LCD_ShowNum(15, 20, max_index, 5, 12);
+		//LCD_ShowNum(15, 20, max_index, 5, 12);
 		//LCD_ShowString(50, 15, 16, (u8 *)class_name[max_index], 1);
 }

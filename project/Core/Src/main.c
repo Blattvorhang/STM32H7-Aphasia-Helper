@@ -63,7 +63,7 @@
 
 /* USER CODE BEGIN PV */
 extern uint8_t ov_sta;	//在stm32h7xx_it里面定义
-uint16_t screen_buffer[240][320];
+uint16_t screen_buffer[240][240];  // 用于存储OV7670的画面，320*240 -> 240*240
 signed char gyro_orientation[9] = { 1,  0,  0,
                                     0, -1,  0,
                                     0,  0, -1};
@@ -382,16 +382,24 @@ void camera_refresh(void)
 				color|= GPIOD->IDR&0XFF;//读数据
 				OV7670_RCK_H; 
 				
-				screen_buffer[i][j] = color;
+				if (40 <= j && j < 280) { //顺时针旋转90度，保证和屏幕方向一致
+						//screen_buffer[i][j-40] = color;
+						screen_buffer[j-40][239-i] = color;
+				}
 			}
 		}
 		
-		for(i = 0; i < 240; i++)
-			for(j = 0; j < 320; j++)
-				Lcd_WriteData_16Bit(screen_buffer[i][j]);
+		for(i = 0; i < 240; i++) {
+			for(j = 0; j < 320; j++) {
+				if (40 <= j && j < 280)
+					Lcd_WriteData_16Bit(screen_buffer[i][j - 40]);
+				else
+					Lcd_WriteData_16Bit(0x00); // 画面左右两侧用黑色填充
+			}
+		}
 		
 		aiInference(); //读到一帧画面后开始识别，在此期间外部中断禁用
-		HAL_Delay(500);
+		HAL_Delay(500); //延时以便观察分类结果
 		
 		//ov_frame++;
 		//printf("Frame:%d\r\n", ov_frame);
