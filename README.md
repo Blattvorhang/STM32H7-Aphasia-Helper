@@ -1,24 +1,32 @@
 # STM32H7 Aphasia Helper
-失语症患者辅助设备
+失语症患者辅助设备，全国大学生嵌入式芯片与系统设计竞赛，嵌入式人工智能赛道。
 
 ## Hardware
-- STM32H7A3ZI-Q
+![](./imgs/peripherals.png)
+- STM32H7A3ZI-Q (MCU)
 - OV7670 (Camera): 320x240, 30fps, RGB565
 - ST7735 (2.8" TFT LCD): 240x320, RGB565
 - ATK-MPU6050 (Gyroscope)
-- LD3320 (Voice Recognition)
+- LD3320 (Voice Recognition) (Not used)
 - Passive Buzzer
+- Infra-red Sensor
+- Vibration Motor
+- Lithium Battery (5V, Micro USB)
 
 ## PCB
+![](./imgs/schematic.png)
 ![](./imgs/PCB.svg)
 
-## Encoding
-- GB2312
+## 3D Model
+![](./imgs/3d_modeling.png)
+
+## Pins Configuration
+![](./imgs/pins.png)
 
 ## UI
 - Home 
 
-![](./imgs/UI/choose_camera.jpg)
+![](./imgs/UI/choose_eat.jpg)
 
 - Calling
 
@@ -27,6 +35,9 @@
 ## Project Configuration
 - Target: Use MicroLIB
 - Debug: ST-Link Debugger
+
+## Encoding
+- GB2312
 
 ## References
 - [Hardware SPI Register](https://www.armbbs.cn/forum.php?mod=viewthread&tid=117991)
