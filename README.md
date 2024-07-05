@@ -1,6 +1,20 @@
 # STM32H7 Aphasia Helper
 失语症患者辅助设备，全国大学生嵌入式芯片与系统设计竞赛，嵌入式人工智能赛道。
 
+## Table of Contents
+- [Product](#product)
+- [X-Cube-AI](#x-cube-ai)
+- [Hardware](#hardware)
+  - [Connection](#connection)
+- [PCB](#pcb)
+- [3D Model](#3d-model)
+- [Pins Configuration](#pins-configuration)
+- [UI](#ui)
+- [Project Configuration](#project-configuration)
+- [Encoding](#encoding)
+- [References](#references)
+
+
 ## Product
 ![](./imgs/product.png)
 
