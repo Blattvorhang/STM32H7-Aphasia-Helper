@@ -1,6 +1,12 @@
 # STM32H7 Aphasia Helper
 失语症患者辅助设备，全国大学生嵌入式芯片与系统设计竞赛，嵌入式人工智能赛道。
 
+## Product
+![](./imgs/product.png)
+
+## X-Cube-AI
+![](./imgs/AI.png)
+
 ## Hardware
 ![](./imgs/peripherals.png)
 - STM32H7A3ZI-Q (MCU)
@@ -12,6 +18,9 @@
 - Infra-red Sensor
 - Vibration Motor
 - Lithium Battery (5V, Micro USB)
+
+### Connection
+![](./imgs/connection.png)
 
 ## PCB
 ![](./imgs/schematic.png)
@@ -30,7 +39,7 @@
 
 - Calling
 
-![](./imgs/UI/call_camera.jpg)
+![](./imgs/UI/call_eat.jpg)
 
 ## Project Configuration
 - Target: Use MicroLIB
