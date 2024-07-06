@@ -73,7 +73,7 @@ Based on Rhino 3D
 ## File Structure
 ```shell
 ├─imgs                 # Images
-|-3d_model             # 3D model (Rhino 3D)
+├─3d_model             # 3D model (Rhino 3D)
 └─project              # Main project directory
     ├─H7_Ultimate.ioc  # STM32CubeMX project configuration file
     ├─.ai
