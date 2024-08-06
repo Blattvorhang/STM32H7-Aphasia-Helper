@@ -10,7 +10,7 @@
       <TargetName>H7_Ultimate</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -137,7 +137,7 @@
             <DriverSelection>4101</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2>BIN\UL2V8M.DLL</Flash2>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
           <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -190,7 +190,7 @@
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H7A3xxQ</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;..\X-CUBE-AI\App;..\X-CUBE-AI;..\X-CUBE-AI\Target;..\Middlewares\ST\AI\Inc;..\X-CUBE-AI\App;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\Hardware\GUI;..\Hardware\LD3320;..\Hardware\mpu6050;..\Hardware\Music;..\Hardware\SCCB;..\Hardware\SYSTEM;..\AI-run</IncludePath>
+              <IncludePath>../Core/Inc;..\X-CUBE-AI\App;..\X-CUBE-AI;..\X-CUBE-AI\Target;..\Middlewares\ST\AI\Inc;..\X-CUBE-AI\App;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\Hardware\GUI;..\Hardware\LD3320;..\Hardware\mpu6050;..\Hardware\Music;..\Hardware\SCCB;..\Hardware\SYSTEM;..\AI-run;..\Hardware\SYN6288</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -783,6 +783,16 @@
               <FileName>data_processing.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\AI-run\data_processing.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SYN6288</GroupName>
+          <Files>
+            <File>
+              <FileName>SYN6288.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\SYN6288\SYN6288.c</FilePath>
             </File>
           </Files>
         </Group>

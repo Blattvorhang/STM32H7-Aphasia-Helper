@@ -42,6 +42,7 @@
 #include "music.h"
 #include "ai_model.h"
 #include "data_processing.h"
+#include "SYN6288.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -80,7 +81,7 @@ void SystemClock_Config(void);
 void PeriphCommonClock_Config(void);
 /* USER CODE BEGIN PFP */
 void camera_refresh(void);
-void ChioceConfirm(void);
+void ChoiceConfirm(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -135,6 +136,7 @@ int main(void)
   MX_TIM7_Init();
   MX_X_CUBE_AI_Init();
   /* USER CODE BEGIN 2 */
+	MX_USART6_UART_Init();
 	LCD_Init();	   //液晶屏初始化
 	HAL_Delay(50);
 	
@@ -216,10 +218,24 @@ int main(void)
 					camera_refresh();
 					break;
 				case IMG_EAT:
-					PlaySong(LORD_OF_CINDER);
+					// PlaySong(LORD_OF_CINDER);
+					SYN_FrameInfo(0,(unsigned char* )"[v16][m7][t5]我要吃饭喝水");
+					for (int i = 0; i < 25; i++) {
+						HAL_Delay(100);
+						if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0) {  // 每播放一个100ms，判断一次红外，遮挡则停止播放
+							break;
+						}
+					}
 					break;
 				case IMG_WC:
-					PlaySong(CITY_OF_TEARS);
+					// PlaySong(CITY_OF_TEARS);
+					SYN_FrameInfo(0,(unsigned char* )"[v16][m7][t5]我要上厕所");
+					for (int i = 0; i < 25; i++) {
+						HAL_Delay(100);
+						if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0) {  // 每播放一个100ms，判断一次红外，遮挡则停止播放
+							break;
+						}
+					}
 					break;
 				default:
 					break;
@@ -239,7 +255,7 @@ int main(void)
 		{
 			if (!confirm_flag){
 				last_choice = NO_CHOICE;
-				ChioceConfirm();
+				ChoiceConfirm();
 			}
 			confirm_flag = !confirm_flag;
 		}
@@ -249,7 +265,7 @@ int main(void)
 		{
 			LD3320_main();
 			if (confirm_flag) 
-				ChioceConfirm();
+				ChoiceConfirm();
 		}
 		*/
 		last_infrared = HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin);
@@ -411,7 +427,7 @@ void camera_refresh(void)
 	} 
 }
 
-void ChioceConfirm(void)
+void ChoiceConfirm(void)
 {
 	// 马达震动表示确认
 	HAL_GPIO_WritePin(MOTOR_1_GPIO_Port, MOTOR_1_Pin, GPIO_PIN_SET);
