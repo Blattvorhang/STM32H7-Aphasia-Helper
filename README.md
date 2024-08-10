@@ -41,6 +41,7 @@
 - OV7670 (Camera): 320x240, 30fps, RGB565
 - ST7735 (2.8" TFT LCD): 240x320, RGB565
 - ATK-MPU6050 (Gyroscope)
+- SYN6288 (Voice Synthesis)
 - LD3320 (Voice Recognition) (Not used)
 - Passive Buzzer
 - Infra-red Sensor
@@ -87,6 +88,7 @@ Based on Rhino 3D
     │  ├─mpu6050       # MPU6050
     │  ├─Music         # Music
     │  ├─SCCB          # SCCB protocol code for OV7670
+    │  ├─SYN6288       # SYN6288 (Voice Recognition)
     │  └─SYSTEM        # System define and delay
     ├─MDK-ARM          # Keil Project
     ├─Middlewares      # X-Cube-AI
