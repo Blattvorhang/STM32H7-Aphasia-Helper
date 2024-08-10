@@ -53,11 +53,11 @@ void YS_SYN_Set(uint8_t *Info_data)
 }
 
 void SYN_Speak(char *text) {
-  char str[50];
+  char str[100];
   // v: 音量，取值范围0~15；m: 背景音乐音量，取值范围0~15；t: 语速，取值范围0~5
   sprintf(str, "[v16][m7][t5]%s", text);
   SYN_FrameInfo(0, (unsigned char* )str);  // 0: 无背景音乐
-  for (int i = 0; i < 25; i++) {
+  for (int i = 0; i < 25; i++) {  // 固定等待时间，确保播放完毕
     HAL_Delay(100);
     if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0) {  // 每播放100ms，判断一次红外，遮挡则停止播放，以便丝滑地停止
       break;

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "ai_platform.h"
 #include "class_mapping.h"
 #include "network.h"
@@ -6,6 +7,7 @@
 #include "lcd.h"
 #include "gui.h"
 #include "test.h"
+#include "SYN6288.h"
 
 #define WIDTH 240
 #define HEIGHT 240
@@ -13,6 +15,8 @@
 #define NEW_HEIGHT 160
 
 extern uint16_t screen_buffer[WIDTH][HEIGHT];
+
+void speak_class_name(int32_t class_idx);
 
 void RGB565_to_RGB888(uint16_t rgb565, uint8_t *r, uint8_t *g, uint8_t *b)
 {
@@ -92,11 +96,11 @@ void copy_data(uint8_t *src, uint8_t *dst, int size)
 void acquire_and_process_data(int8_t *data)
 {
     // Use static variables to avoid allocating memory on the stack
-  	// Read the RGB565 format image data
-    static uint16_t *rgb565_data = (uint16_t *)screen_buffer; //WIDTH * HEIGHT;
+    // Read the RGB565 format image data
+    static uint16_t *rgb565_data = (uint16_t *)screen_buffer; // WIDTH * HEIGHT;
     static uint8_t src_img[WIDTH * HEIGHT * 3];
     static uint8_t dst_img[NEW_WIDTH * NEW_HEIGHT * 3];
-    
+
     uint32_t i;
 
     // Convert RGB565 to RGB888
@@ -121,8 +125,8 @@ void post_process(const int8_t *data)
     // Find the index of the maximum value, which corresponds to the predicted class
     int32_t max = INT32_MIN;
     int32_t max_index = 0;
-		static char class_str[50];
-	
+    static char class_str[50];
+
     for (int i = 0; i < AI_NETWORK_OUT_1_SIZE_BYTES; i++)
     {
         if (data[i] > max)
@@ -132,10 +136,31 @@ void post_process(const int8_t *data)
         }
     }
     printf("Prediction: %d %s\n", max_index, class_name[max_index]);
-		
+
     sprintf(class_str, "%d %s", max_index, class_name[max_index]);
     Show_Str(45, 17, WHITE, DARKBLUE, (u8 *)class_str, 16, 1);
 		
-		//LCD_ShowNum(15, 20, max_index, 5, 12);
-		//LCD_ShowString(50, 15, 16, (u8 *)class_name[max_index], 1);
+    // LCD_ShowNum(15, 20, max_index, 5, 12);
+    // LCD_ShowString(50, 15, 16, (u8 *)class_name[max_index], 1);
+		
+    speak_class_name(max_index);
+}
+
+void speak_class_name(int32_t class_idx)
+{
+    char text[100];
+    char class_name[100];
+    switch (class_idx)
+    {
+        case 508:
+            strcpy(class_name, "¼üÅÌ");
+            break;
+        default:
+            return;
+    }
+    sprintf(text, "ÎÒÒª%s", class_name);
+
+    uint8_t repeat_time = 3;
+    for (uint8_t i = 0; i < repeat_time; i++)
+        SYN_Speak(text);
 }
