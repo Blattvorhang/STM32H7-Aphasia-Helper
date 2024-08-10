@@ -219,23 +219,11 @@ int main(void)
 					break;
 				case IMG_EAT:
 					// PlaySong(LORD_OF_CINDER);
-					SYN_FrameInfo(0,(unsigned char* )"[v16][m7][t5]我要吃饭喝水");
-					for (int i = 0; i < 25; i++) {
-						HAL_Delay(100);
-						if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0) {  // 每播放一个100ms，判断一次红外，遮挡则停止播放
-							break;
-						}
-					}
+					SYN_Speak("我要吃饭喝水");
 					break;
 				case IMG_WC:
 					// PlaySong(CITY_OF_TEARS);
-					SYN_FrameInfo(0,(unsigned char* )"[v16][m7][t5]我要上厕所");
-					for (int i = 0; i < 25; i++) {
-						HAL_Delay(100);
-						if (HAL_GPIO_ReadPin(INFRARED_GPIO_Port, INFRARED_Pin) == 0) {  // 每播放一个100ms，判断一次红外，遮挡则停止播放
-							break;
-						}
-					}
+					SYN_Speak("我要上厕所");
 					break;
 				default:
 					break;
