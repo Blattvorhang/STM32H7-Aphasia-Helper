@@ -155,7 +155,7 @@ void speak_class_name(int32_t class_idx)
         case 508:
             strcpy(class_name, "¼üÅÌ");
             break;
-        default:
+        default:  // Other classes are not supported
             return;
     }
     sprintf(text, "ÎÒÒª%s", class_name);
