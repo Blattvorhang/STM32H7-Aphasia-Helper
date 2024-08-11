@@ -155,6 +155,26 @@ void speak_class_name(int32_t class_idx)
         case 508:
             strcpy(class_name, "¼üÅÌ");
             break;
+        case 607:
+        case 948:
+        case 950:
+        case 722:
+            strcpy(class_name, "éÙ×Ó");
+            break;
+        case 954:
+            strcpy(class_name, "Ïã½¶");
+            break;
+        case 999:
+            strcpy(class_name, "Ö½½í");
+            break;
+        case 440:
+        case 441:
+        case 455:
+        case 737:
+        case 898:
+        case 907:
+            strcpy(class_name, "Æ¿×Ó");
+            break;
         default:  // Other classes are not supported
             return;
     }
